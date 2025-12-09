@@ -55,7 +55,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: https://andre-min.github.io/ron-bugado-academy13-api-robot/cucumber-report.html
+      url: https://andre-min.github.io/curso-cypress-cucumber/cucumber-report.html
 
     steps:
       - name: Setup Pages
