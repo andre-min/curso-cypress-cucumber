@@ -60,6 +60,8 @@ jobs:
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
 
       - name: Download Linux Report
         uses: actions/download-artifact@v4
