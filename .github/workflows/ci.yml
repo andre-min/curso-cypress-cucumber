@@ -63,25 +63,34 @@ jobs:
         with:
           enablement: true
 
-      # Baixar relatório Linux na pasta /results/linux/
+      # Download Linux report
       - name: Download Linux Report
         uses: actions/download-artifact@v4
         with:
           name: test-report-linux
-          path: results/linux/
+          path: temp/linux/
 
-      # Baixar relatório Windows na pasta /results/windows/
+      # Download Windows report
       - name: Download Windows Report
         uses: actions/download-artifact@v4
         with:
           name: test-report-windows
-          path: results/windows/
+          path: temp/windows/
 
-      # Publicar toda a pasta results/
+      # Renomear e mover para raiz da publicação
+      - name: Move reports to root
+        run: |
+          mkdir site
+          mv temp/linux/cucumber-report.html site/cucumber-linux.html
+          mv temp/windows/cucumber-report.html site/cucumber-windows.html
+          echo "Arquivos movidos e renomeados: "
+          ls -R site
+
+      # Publicar tudo que estiver na pasta site/
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: results/
+          path: site/
 
       - name: Deploy to GitHub Pages
         id: deployment
