@@ -1,13 +1,19 @@
 name: End-to-end Tests
-on: push
+
+on:
+  push:
+  workflow_dispatch:
+
 jobs:
   tests-linux:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Run Cypress Tests 🧪
         uses: cypress-io/github-action@v6
+
       - name: HTML Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -21,8 +27,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Run Cypress Tests 🧪
         uses: cypress-io/github-action@v6
+
       - name: HTML Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -30,3 +38,49 @@ jobs:
           name: test-report-windows
           path: cucumber-report.html
           if-no-files-found: ignore
+
+
+  deploy:
+    name: Deploy HTML Report to GitHub Pages
+    needs: 
+      - tests-linux
+      - tests-windows
+    runs-on: ubuntu-24.04
+    if: always()
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: https://andre-min.github.io/ron-bugado-academy13-api-robot/cucumber-report.html
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Download Linux Report
+        uses: actions/download-artifact@v4
+        with:
+          name: test-report-linux
+          path: results/
+
+      - name: Download Windows Report
+        uses: actions/download-artifact@v4
+        with:
+          name: test-report-windows
+          path: results/windows/
+
+      # Se você quiser publicar só o relatório do Linux, delete a parte acima do Windows
+      # Se quiser publicar ambos, deixe assim mesmo.
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: results/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
