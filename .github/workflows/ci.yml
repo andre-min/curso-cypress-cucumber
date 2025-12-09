@@ -55,7 +55,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: https://andre-min.github.io/curso-cypress-cucumber/cucumber-report.html
+      url: https://andre-min.github.io/curso-cypress-cucumber/
 
     steps:
       - name: Setup Pages
@@ -63,21 +63,21 @@ jobs:
         with:
           enablement: true
 
+      # Baixar relatório Linux na pasta /results/linux/
       - name: Download Linux Report
         uses: actions/download-artifact@v4
         with:
           name: test-report-linux
-          path: results/
+          path: results/linux/
 
+      # Baixar relatório Windows na pasta /results/windows/
       - name: Download Windows Report
         uses: actions/download-artifact@v4
         with:
           name: test-report-windows
           path: results/windows/
 
-      # Se você quiser publicar só o relatório do Linux, delete a parte acima do Windows
-      # Se quiser publicar ambos, deixe assim mesmo.
-
+      # Publicar toda a pasta results/
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
